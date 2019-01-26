@@ -1,0 +1,86 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Button,Table,Search} from "./App";
+import renderer from 'react-test-renderer'
+import Enzyme,{shallow} from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import App1 from './App';
+//App1的测试
+describe('App1',()=>{
+    it('render without crashing',()=>{
+        const div=document.createElement('div');
+        ReactDOM.render(<App1/>,div);
+    });
+    test('has a valid snapshot', ()=>{
+        const component2=renderer.create(<App1/>);
+        let tree1=component2.toJSON();
+        expect(tree1).toMatchSnapshot();
+    });
+});
+
+//Search组建的测试
+describe('Search',()=>{
+    //DOM测试
+    it('renders without crashing',()=>{
+        const div=document.createElement('div');
+        ReactDOM.render(<Search>搜索</Search>,div);
+    });
+    //快照测试
+    test('has a valid snapshot', ()=>{
+        const component2=renderer.create(<Search>搜索</Search>);
+        let tree2=component2.toJSON();
+        expect(tree2).toMatchSnapshot();
+    });
+});
+
+//Button组建的测试
+describe('Button',()=>{
+    it('renders without crashing',()=>{
+        const div3=document.createElement('div');
+        ReactDOM.render(<Button>请按一下我删除</Button>,div3);
+    });
+    test('has a valid snapshot', ()=>{
+        const componen3=renderer.create(<Button>请按一下我</Button>);
+        let tree3=componen3.toJSON();
+        expect(tree3).toMatchSnapshot();
+    });
+});
+
+//Table组建的测试，添加一些props属性去测试
+describe('Table',()=>{
+    const props= {
+        list:[
+            {title:'1',author:'1',num_comments:1,points:2,objectID:'y'},
+            {title:'2',author:'2',num_comments:1,points:2,objectID:'z'},
+        ],
+        sortKey:"TITLE",
+        isSortReverse:false
+    };
+    it('renders without crashing',()=>{
+        const div5=document.createElement('div');
+        ReactDOM.render(<Table{...props}/>,div5);
+    });
+    test('has a valid snapshot', ()=> {
+      const component5=renderer.create(<Table{...props}/>);
+      let tree5=component5.toJSON();
+      expect(tree5).toMatchSnapshot();
+    });
+});
+
+///////////////////////////////////单元测试和Enzyme//////////////////////////////
+Enzyme.configure({adapter:new Adapter()});
+describe('Table',()=>{
+    const props={
+        list:[
+            {title:'1',author:'1',num_comments:1,points:2,objectID:'y'},
+            {title:'2',author:'2',num_comments:1,points:2,objectID:'z'},
+        ],
+        sortKey:"TITLE",
+        isSortReverse:false
+    };
+    it('show to items in list ', ()=>{
+        const element=shallow(<Table{...props}/>);
+        expect(element.find('.table-row').length).toBe(2);
+
+    });
+});
